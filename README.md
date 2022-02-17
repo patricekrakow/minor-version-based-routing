@@ -14,7 +14,7 @@ However, given that (1) the implementation of API endpoints can (should) evolve 
 
 Let's illustrate that point with the following scenario:
 
-1. The `Producer P1` designs the `Alpha API`, containing the `API endpoint X`, and markes it with the (semantic) version `1.0.0`.
+1. The `Producer P1` designs the `Alpha API`, containing the `API endpoint X`, and marks it with the (semantic) version `1.0.0`.
 2. The `Producer P1` deploys several instances of the `Service S1` that implements the `API endpoint X` as defined the version `1.0.0` of the `Alpha API`.
 3. The `Consumer C1` successfully creates a subscription for the `Application A1` to the `API endpoint X` as defined the version `1.0.0` of the `Alpha API`.
 4. The requests from the `Application A1` to the `API endpoint X` are routed to `Service S1` instances.
@@ -25,3 +25,11 @@ Let's illustrate that point with the following scenario:
 9. The requests from the `Application A2` to the `API endpoint X` are routed **exclusively** to `Service S2` instances, as the `Service S1` instances do not implement the new feature(s) introduced by the version `1.1.0` of the `Alpha API` that might be needed by the `Application A2`.
 
 Therefore it is clear that, within the service mesh, the client router MUST route API endpoint requests checking that the **minor version of the API from the subscription is equal or lower than the minor version of the API from the implementation**, while the major versions MUST match exactly of course. It is this check that we propose to call the **_Minor Version-Based Routing_**.
+
+<br>
+<figure>
+  <img src="./minor-version-based-routing.01.png" alt="Trulli" style="width:100%">
+  <br>
+  <figcaption align = "center"><b>Figure 1:</b> Minor Version-Based Routing</figcaption>
+  <br>
+</figure>
