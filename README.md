@@ -14,13 +14,14 @@ However, given that (1) the implementation of API endpoints can (should) evolve 
 
 Let's illustrate that point with the following scenario:
 
-1. The `Alpha API`, containing the `API endpoint X`, has been designed by the `Producer P1` and marked with the (semantic) version `1.0.0`.
-2. The `Producer P1` deploys several instances of the `Service S1` which implements the `API endpoint X` as defined the version `1.0.0` of the `Alpha API`.
+1. The `Producer P1` designs the `Alpha API`, containing the `API endpoint X`, and markes it with the (semantic) version `1.0.0`.
+2. The `Producer P1` deploys several instances of the `Service S1` that implements the `API endpoint X` as defined the version `1.0.0` of the `Alpha API`.
 3. The `Consumer C1` successfully creates a subscription for the `Application A1` to the `API endpoint X` as defined the version `1.0.0` of the `Alpha API`.
-4. The `Producer P1` designs a new backward compatible change of the `API endpoint X` of her/his `Alpha API` which is then marked with the (semantic) version `1.1.0`.
-5. The `Producer P1` deploys several instances of the `Service S2` which implements the `API endpoint X` as defined the version `1.1.0` of the `Alpha API`.
-6. The requests from the `Application A1` to the `API endpoint X` can be routed to either `Service S1` or `Service S2` instances as the change introduced was backward compatible.
-7. The `Consumer C2` successfully creates a subscription for the `Application A2` to the `API endpoint X`  **as defined the version `1.1.0` of the `Alpha API`**.
-8. The requests from the `Application A2` to the `API endpoint X` MUST be routed exclusively to `Service S2` instances, as the `Service S1` instances do not implement new features introduced by the version `1.1.0` of the `Alpha API` that might be needed by the `Application A2`.
+4. The requests from the `Application A1` to the `API endpoint X` are routed to `Service S1` instances.
+5. The `Producer P1` designs a backward compatible change of the `API endpoint X` of her/his `Alpha API`, which is then marked with the (semantic) version `1.1.0`.
+6. The `Producer P1` deploys several instances of the `Service S2` which implements the `API endpoint X` as defined the version `1.1.0` of the `Alpha API`.
+7. The requests from the `Application A1` to the `API endpoint X` are routed to **both** `Service S1` or `Service S2` instances as the change introduced was backward compatible.
+8. The `Consumer C2` successfully creates a subscription for the `Application A2` to the `API endpoint X` **as defined the version `1.1.0` of the `Alpha API`**.
+9. The requests from the `Application A2` to the `API endpoint X` are routed **exclusively** to `Service S2` instances, as the `Service S1` instances do not implement the new feature(s) introduced by the version `1.1.0` of the `Alpha API` that might be needed by the `Application A2`.
 
 Therefore it is clear that, within the service mesh, the client router MUST route API endpoint requests checking that the **minor version of the API from the subscription is equal or lower than the minor version of the API from the implementation**, while the major versions MUST match exactly of course. It is this check that we propose to call the **_Minor Version-Based Routing_**.
